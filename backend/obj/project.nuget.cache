@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "pF+kjLLTBf0y+AMlSjGlvKqdYK06YSWiuV6KnYnLCpYOYyyAkZZPSN7+S376qFOa0Ao3+ngWsk+mgzQtbgUV8Q==",
+  "success": true,
+  "projectFilePath": "/home/mukiva/DEV/FileManager/backend/backend.csproj",
+  "expectedPackageFiles": [
+    "/home/mukiva/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.9/microsoft.aspnetcore.app.ref.6.0.9.nupkg.sha512"
+  ],
+  "logs": []
+}

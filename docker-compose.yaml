@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    ports:
+      - "5432:5432"
+    container_name: db
+    volumes:
+      - ./.database/postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=root
+    image: postgres:14.5-alpine3.16
+
+  backend:
+    image: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./.database/filesData:/filesData
+    ports:
+      - "5000:8080"
+    container_name: asp_backend
+
+
+  client:
+    image: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5001:3000"
+    container_name: react_client
+
+  proxy:
+    image: nginx:stable-alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+
+    
+  
