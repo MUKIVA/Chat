@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   db:
+    container_name: db
     ports:
       - "5432:5432"
-    container_name: db
     volumes:
       - ./.database/postgres/data:/var/lib/postgresql/data
     environment:
@@ -13,6 +13,7 @@ services:
     image: postgres:14.5-alpine3.16
 
   backend:
+    container_name: asp_backend
     image: backend
     build:
       context: ./backend
@@ -21,17 +22,16 @@ services:
       - ./.database/filesData:/filesData
     ports:
       - "5000:8080"
-    container_name: asp_backend
 
 
   client:
+    container_name: client
     image: client
     build:
       context: ./client
       dockerfile: Dockerfile
     ports:
       - "5001:3000"
-    container_name: react_client
 
   proxy:
     image: nginx:stable-alpine
