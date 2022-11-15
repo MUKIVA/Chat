@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.15
+FROM node:16.18.0
 WORKDIR /app
 COPY . .
 RUN npm run build
