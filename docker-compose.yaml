@@ -17,8 +17,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    volumes:
-      - ./.database/filesData:/filesData
     ports:
       - "5000:8080"
     container_name: asp_backend

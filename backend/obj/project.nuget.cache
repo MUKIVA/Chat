@@ -1,10 +1,18 @@
 {
   "version": 2,
-  "dgSpecHash": "pF+kjLLTBf0y+AMlSjGlvKqdYK06YSWiuV6KnYnLCpYOYyyAkZZPSN7+S376qFOa0Ao3+ngWsk+mgzQtbgUV8Q==",
+  "dgSpecHash": "GzSlhRRyAyca80IHIGm9N2xEY9H8kwOeLy9rFF8WLM6a4WvY3dDDhiE7SA9On7W4S750MHMJymJX0QM1qozrlw==",
   "success": true,
-  "projectFilePath": "/home/mukiva/DEV/FileManager/backend/backend.csproj",
+  "projectFilePath": "C:\\DEV\\Chat\\backend\\backend.csproj",
   "expectedPackageFiles": [
-    "/home/mukiva/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.9/microsoft.aspnetcore.app.ref.6.0.9.nupkg.sha512"
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.11\\microsoft.aspnetcore.authentication.jwtbearer.6.0.11.nupkg.sha512",
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\6.10.0\\microsoft.identitymodel.jsonwebtokens.6.10.0.nupkg.sha512",
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\microsoft.identitymodel.logging\\6.10.0\\microsoft.identitymodel.logging.6.10.0.nupkg.sha512",
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\microsoft.identitymodel.protocols\\6.10.0\\microsoft.identitymodel.protocols.6.10.0.nupkg.sha512",
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\6.10.0\\microsoft.identitymodel.protocols.openidconnect.6.10.0.nupkg.sha512",
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\microsoft.identitymodel.tokens\\6.10.0\\microsoft.identitymodel.tokens.6.10.0.nupkg.sha512",
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.10.0\\system.identitymodel.tokens.jwt.6.10.0.nupkg.sha512",
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }

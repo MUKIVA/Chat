@@ -4,10 +4,11 @@ using backend.Models;
 
 namespace backend.Controllers;
 
-[Route("api/users")]
+
 [ApiController]
 public class UsersController : Controller
 {
+    [Route("api/users")]
     public IActionResult GetUsers()
     {
         var users = new[]

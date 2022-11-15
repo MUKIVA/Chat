@@ -1,5 +1,5 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Chat Page";
 }
 
 <!DOCTYPE html>
@@ -33,8 +33,9 @@
                 });
         });
         // получение данных с сервера
-        hubConnection.on("Receive", function (message, userName) {
- 
+        hubConnection.on("Receive", function (message, userName, date) {
+            
+            let d = new Date(date);
             // создаем элемент <b> для имени пользователя
             const userNameElem = document.createElement("b");
             userNameElem.textContent = `${userName}: `;
@@ -42,7 +43,7 @@
             // создает элемент <p> для сообщения пользователя
             const elem = document.createElement("p");
             elem.appendChild(userNameElem);
-            elem.appendChild(document.createTextNode(message));
+            elem.appendChild(document.createTextNode(d));
  
             // добавляем новый элемент в самое начало
             // для этого сначала получаем первый элемент
