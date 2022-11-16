@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "GzSlhRRyAyca80IHIGm9N2xEY9H8kwOeLy9rFF8WLM6a4WvY3dDDhiE7SA9On7W4S750MHMJymJX0QM1qozrlw==",
+  "dgSpecHash": "3U6aRUwdv2+kLbzbo//bDiwYl86X539q9I9F0Xf5fmuGg+yu+ekvMAqJ/vpjSgSdqKcrndJzSMx6ikyYAskqHQ==",
   "success": true,
   "projectFilePath": "C:\\DEV\\Chat\\backend\\backend.csproj",
   "expectedPackageFiles": [
@@ -11,7 +11,9 @@
     "C:\\Users\\MUKIVA\\.nuget\\packages\\microsoft.identitymodel.protocols\\6.10.0\\microsoft.identitymodel.protocols.6.10.0.nupkg.sha512",
     "C:\\Users\\MUKIVA\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\6.10.0\\microsoft.identitymodel.protocols.openidconnect.6.10.0.nupkg.sha512",
     "C:\\Users\\MUKIVA\\.nuget\\packages\\microsoft.identitymodel.tokens\\6.10.0\\microsoft.identitymodel.tokens.6.10.0.nupkg.sha512",
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\npgsql\\6.0.7\\npgsql.6.0.7.nupkg.sha512",
     "C:\\Users\\MUKIVA\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.10.0\\system.identitymodel.tokens.jwt.6.10.0.nupkg.sha512",
+    "C:\\Users\\MUKIVA\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
     "C:\\Users\\MUKIVA\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512"
   ],
   "logs": []

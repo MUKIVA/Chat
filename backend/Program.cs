@@ -4,18 +4,16 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using backend.Hubs;
-
+using backend.DbTools;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
-builder.Services.AddCors(options => options.AddPolicy("CorsPolicy", 
-policy => 
-{
-    policy.WithOrigins("http://localhost:3000");
-}));
+builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
+    (opt) => opt.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader())
+);
 
 var app = builder.Build();
 
@@ -25,7 +23,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseDefaultFiles();
 
@@ -37,6 +35,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapHub<ChatHub>("/chat");
+app.MapHub<ChatHub>("/chat"); // route: api/chat
 
+DbConfig.InitConnection();
 app.Run();
