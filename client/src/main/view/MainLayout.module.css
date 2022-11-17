@@ -1,0 +1,98 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel {
+    background-color: #2b2b2b;
+    /* position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999; */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100vw;
+    height: 50px;
+}
+
+.currUser {
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    margin-right: 10px;
+    margin-bottom: 1px;
+}
+
+.chat {
+    background-color: rgb(255, 255, 255);
+    width: 50vw;
+    height: max-content;
+    max-height: calc(1030 / 1080)+'vh';
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.list {
+    overflow-y: auto;
+    /* scroll-snap-type: y mandatory; */
+    /* scroll-snap-align: start; */
+    height: 88vh;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+}
+
+.buttonsBlock {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.userName {
+    margin-right: 8px;
+    color: #131313;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.text {
+    color: #131313;
+    max-width: 20vw;
+    height: fit-content;
+    word-wrap: break-word;
+  }
+
+.enterBlock {
+    /* width: 100%;
+    position: fixed;
+    top: calc(100vh - 60px);
+    left: 0;
+    z-index: 999; */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin: 10px;
+}
+
+.textInput {
+    
+}
+
+.textInput:hover {
+    border-color: rgb(156, 156, 156);
+}
+
+.textInput:focus {
+    border-color: rgb(104, 104, 104);
+    box-shadow: none;
+}
+
+.textInput::selection {
+    background: none;
+    box-shadow: none;
+}
