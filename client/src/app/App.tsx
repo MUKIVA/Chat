@@ -1,11 +1,11 @@
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { createSignalRContext } from 'react-signalr';
+// import { createSignalRContext } from 'react-signalr';
 import { AuthLayout } from '../auth/view/AuthLayout';
 import { MainLayout } from '../main/view/MainLayout';
 import styles from "./App.module.css"
 
-const SignalRContext = createSignalRContext();
+//const SignalRContext = createSignalRContext();
 
 function App() {
 
@@ -16,13 +16,13 @@ function App() {
         <Route exact path="/auth" >
           <AuthLayout />
         </Route>
-        <SignalRContext.Provider
-          url={"/api/chat"}
-        >
+        {/* <SignalRContext.Provider
+          url={"https://example/hub"}
+        > */}
           <Route path="/main" >
             <MainLayout />
           </Route>
-        </SignalRContext.Provider>
+        {/* </SignalRContext.Provider> */}
       </Switch>
     </div>
   );

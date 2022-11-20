@@ -4,7 +4,7 @@ import { HttpStatus } from '../core/http/HttpStatus';
 import { MessageData } from '../main/model/MessageData';
 import { mockMessages } from '../main/model/MockMessages';
 
-const BASE_URL = '/api/messages/'
+const BASE_URL = 'http://localhost:5000/api/messages/'
 
 export type EditMessageApiPayload = {
     id: string,
@@ -46,7 +46,6 @@ async function getMessages(): Promise<MessageData[]> {
     const url = BASE_URL + 'get_message_range'
     const request = await fetch(url, {
         method: 'GET',
-        
         body: JSON.stringify({
             offset: 0,
             count: 10,

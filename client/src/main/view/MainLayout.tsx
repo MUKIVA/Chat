@@ -12,6 +12,7 @@ import { mainActions, setText, textAtom } from '../model/main';
 import { authActions, authAtoms } from '../../auth/model/auth';
 import { MessageBlock } from './MessageBlock';
 import { List } from 'antd';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 
 const logoutButtonStyle: React.CSSProperties = {
     marginRight: 20,
@@ -62,16 +63,30 @@ export function MainLayout() {
         }
     }
 
+    // useEffect(() => {
+    //     handleLoadMessages()
+    // }, [isAuth]);
+
+    const [ connection, setConnection ] = useState<HubConnection|null>(null);
+
     useEffect(() => {
-        handleLoadMessages()
+        const newConnection = new HubConnectionBuilder()
+            .withUrl('https://localhost:5000/api/chat')
+            .withAutomaticReconnect()
+            .build();
+
+        setConnection(newConnection);
     }, [isAuth]);
 
-    // useSignalREffect(
-    //     "messages",
-    //     () => {if (isAuth) handleLoadMessages()},
-    //     //() => {if (isAuth) handleLoadMessages()},
-    //     [messagesList],
-    // );
+    useEffect(() => {
+        if (connection) {
+            connection.start()
+                .then(result => {
+                    handleLoadMessages()
+                })
+                .catch(e => console.log('Connection failed: ', e));
+        }
+    }, [connection]);
 
     if (!isAuth) {
         return <Redirect to={'/auth'} />
@@ -107,7 +122,3 @@ export function MainLayout() {
         </div>
     )
 }
-
-// function useSignalREffect(arg0: string, arg1: (message: any) => void, arg2: { [item: string]: MessageData; }[]) {
-//     throw new Error('Function not implemented.');
-// }
