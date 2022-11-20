@@ -18,21 +18,16 @@ const sendMessage = declareAsyncAction<Omit<MessageData, 'id'>>(
 const deleteMessage = declareAsyncAction<string>(
     'delete',
     async (messageId, store) => {
-        await MessagesApi.deleteMessage(messageId)
-        store.dispatch(messagesActions.removeMessage([messageId]))
+        const connection = store.getState(connectionAtom)
+        connection?.invoke('Delete', messageId)
     }
 )
 
 const editMessage = declareAsyncAction<MessageData>(
     'edit',
     async (messageData, store) => {
-        await MessagesApi.editMessage({
-            id: messageData.id,
-            text: messageData.text,
-        })
-        store.dispatch(messagesActions.updateMessage({
-            ...messageData,
-        }))
+        const connection = store.getState(connectionAtom)
+        connection?.invoke('Update', messageData.id, messageData.text)
     }
 )
 

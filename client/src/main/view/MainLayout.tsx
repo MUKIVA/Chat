@@ -7,12 +7,12 @@ import { UploadOutlined, SendOutlined } from "@ant-design/icons"
 import TextArea from 'antd/lib/input/TextArea';
 import { UserData } from '../../auth/model/userData';
 import { MessageData } from '../model/MessageData';
-import { messagesAtom } from '../model/message';
+import { messagesActions, messagesAtom } from '../model/message';
 import { connectionAtom, mainActions, setConnection, setText, textAtom } from '../model/main';
 import { authActions, authAtoms } from '../../auth/model/auth';
 import { MessageBlock } from './MessageBlock';
 import { List } from 'antd';
-import { HttpTransportType, HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { HttpTransportType, HubConnectionBuilder } from '@microsoft/signalr';
 
 const logoutButtonStyle: React.CSSProperties = {
     marginRight: 20,
@@ -45,6 +45,8 @@ export function MainLayout() {
     const handleSend = useAction(mainActions.sendMessage)
     const handleEdit = useAction(mainActions.editMessage)
     const handleSetText = useAction(setText)
+    const handleDeleteItem = useAction(messagesActions.removeMessage)
+    const handleUpdateItem = useAction(messagesActions.updateMessage)
     
     const [editingMsg, setEditingMsg] = useState<MessageData|null>(null);
 
@@ -80,30 +82,36 @@ export function MainLayout() {
             .build();
 
         handleSetConnection(newConnection);
-        //console.log(newConnection)
     }, []);
 
     useEffect(() => {
         if (connection) {
             connection.start()
                 .then(result => {
-                    //console.log('Connected!');
-    
                     connection.on('Receive', (id, message, userName, time) => {
-                        console.log(id, message, userName, new Date(time))
-                        handleLoadMessages()
+                        //console.log(id, message, userName, new Date(time))
+                        handleUpdateItem({
+                            id: id,
+                            userName: userName,
+                            text: message,
+                            time: new Date(time),
+                        })
+                    });
+
+                    connection.on('Delete', (id) => {
+                        console.log(id)
+                        handleDeleteItem([id])
+                    });
+
+                    connection.on('Update', (id, msg) => {
+                        console.log(id, msg)
+                        const editedMsg: MessageData = Object.values(messagesList).filter((item) => item.id === id)[0]//
+                        handleUpdateItem({...editedMsg, text: msg})
                     });
                     
                 })
                 .catch(e => console.log('Connection failed: ', e));
         }
-        // if (connection) {
-        //     connection.start()
-        //         .then(result => {
-        //             handleLoadMessages()
-        //         })
-        //         .catch(e => console.log('Connection failed: ', e));
-        // }
     }, [connection]);
 
     if (!isAuth) {
@@ -122,7 +130,7 @@ export function MainLayout() {
                     split={false}
                     itemLayout="horizontal"
                     dataSource={Object.values(messagesList)}
-                    renderItem={(msg) => (
+                    renderItem={(msg?) => (
                         <MessageBlock msg={msg} setEditingMsg={setEditingMsg} />
                     )}
                 />
