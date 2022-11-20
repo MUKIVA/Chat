@@ -22,5 +22,17 @@ namespace backend.Hubs
                     .Subtract(new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc))
                     .TotalMilliseconds);
         }
+
+        public async Task Delete(int id)
+        {
+            await DbExpressions.DeleteMessage(id);
+            await Clients.All.SendAsync("Delete", id);
+        }
+
+        public async Task Update(int id, string msg)
+        {
+            await DbExpressions.UpdateMessage(id, msg);
+            await Clients.All.SendAsync("Update", id, msg);
+        }
     }
 }
