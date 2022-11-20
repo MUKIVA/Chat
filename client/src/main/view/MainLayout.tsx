@@ -68,7 +68,8 @@ export function MainLayout() {
 
     // useSignalREffect(
     //     "messages",
-    //     () => {},
+    //     () => {if (isAuth) handleLoadMessages()},
+    //     //() => {if (isAuth) handleLoadMessages()},
     //     [messagesList],
     // );
 
@@ -107,6 +108,6 @@ export function MainLayout() {
     )
 }
 
-function useSignalREffect(arg0: string, arg1: (message: any) => void, arg2: { [item: string]: MessageData; }[]) {
-    throw new Error('Function not implemented.');
-}
+// function useSignalREffect(arg0: string, arg1: (message: any) => void, arg2: { [item: string]: MessageData; }[]) {
+//     throw new Error('Function not implemented.');
+// }

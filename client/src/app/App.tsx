@@ -17,7 +17,7 @@ function App() {
           <AuthLayout />
         </Route>
         <SignalRContext.Provider
-          url={"https://example/hub"}
+          url={"/api/chat"}
         >
           <Route path="/main" >
             <MainLayout />

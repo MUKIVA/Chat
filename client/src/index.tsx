@@ -6,16 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import { createStore } from '@reatom/core';
 import { context } from '@reatom/react';
 import {BrowserRouter as Router} from 'react-router-dom';
+import { createSignalRContext } from 'react-signalr';
 
-export const store = createStore();
+export const store = createStore()
 
 ReactDOM.render(
   <React.StrictMode>
-    <context.Provider value={store}>
-      <Router>
-        <App />
-      </Router>
-    </context.Provider>
+      <context.Provider value={store}>
+        <Router>
+          <App />
+        </Router>
+      </context.Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

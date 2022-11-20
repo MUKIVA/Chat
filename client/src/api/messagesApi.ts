@@ -1,6 +1,10 @@
+import { resolve } from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { HttpStatus } from '../core/http/HttpStatus';
 import { MessageData } from '../main/model/MessageData';
 import { mockMessages } from '../main/model/MockMessages';
+
+const BASE_URL = '/api/messages/'
 
 export type EditMessageApiPayload = {
     id: string,
@@ -34,11 +38,27 @@ function editMessage(messageData: EditMessageApiPayload): Promise<void> {
 }
 
 async function getMessages(): Promise<MessageData[]> {
-    return await new Promise(resolve => {
-        setTimeout(() => {
-            resolve(mockMessages)
-        }, 1000)
+    // return await new Promise(resolve => {
+    //     setTimeout(() => {
+    //         resolve(mockMessages)
+    //     }, 1000)
+    // })
+    const url = BASE_URL + 'get_message_range'
+    const request = await fetch(url, {
+        method: 'GET',
+        
+        body: JSON.stringify({
+            offset: 0,
+            count: 10,
+        }),
+        mode: 'cors',
+        headers: {
+            Accept: 'application/json',
+            'Access-Control-Allow-Origin':'*'
+        }
     })
+    const response = await request.json()
+    return response.messages
 }
 
 const MessagesApi = {
