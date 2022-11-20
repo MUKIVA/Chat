@@ -1,8 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using backend.Models;
 using backend.DbTools;
-using System.Text;
 using System.Text.Json;
 
 namespace backend.Controllers;

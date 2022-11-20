@@ -1,8 +1,3 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using backend.Hubs;
 using backend.DbTools;
 
@@ -12,7 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
-    (opt) => opt.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader())
+    (opt) => opt
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader())
 );
 
 var app = builder.Build();
