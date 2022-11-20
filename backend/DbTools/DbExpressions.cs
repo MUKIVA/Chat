@@ -22,7 +22,8 @@ namespace backend.DbTools
                     {
                         data.Add(new UserModel() 
                         {
-                            Name = (string)reader["username"]
+                            Name = (string)reader["username"],
+                            Password = (string)reader["user_password"]
                         }); 
                     }
                 }
