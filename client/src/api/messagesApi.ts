@@ -11,14 +11,22 @@ export type EditMessageApiPayload = {
     text: string,
 }
 
-function createMessage(messageData: Omit<MessageData, 'id'>): Promise<{id: string}> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve({
-                id: uuidv4()
-            })
-        }, 1000)
+async function createMessage(messageData: Omit<MessageData, 'id'>): Promise<{id: string}> {
+    const url = BASE_URL + 'add_message'
+    const request = await fetch(url, {
+        method: 'GET',
+        body: JSON.stringify(messageData),
+        //mode: 'cors',
+        headers: {
+            Accept: 'application/json',
+            //'Access-Control-Allow-Origin':'*'
+        }
     })
+    const response = await request.json()
+    console.log(response)
+    return {
+        id: uuidv4()
+    }
 }
 
 function deleteMessage(id: string): Promise<void> {
@@ -37,27 +45,26 @@ function editMessage(messageData: EditMessageApiPayload): Promise<void> {
     })
 }
 
+function responseToMessageData(resp: any): MessageData {
+    return {
+        id: resp.id,
+        userName: resp.name,
+        text: resp.msg,
+        time: new Date(resp.timeMs),
+    }
+}
+
 async function getMessages(): Promise<MessageData[]> {
-    // return await new Promise(resolve => {
-    //     setTimeout(() => {
-    //         resolve(mockMessages)
-    //     }, 1000)
-    // })
-    const url = BASE_URL + 'get_message_range'
+    const url = BASE_URL + 'get_message_range' + '?offset=0&count=100'
     const request = await fetch(url, {
         method: 'GET',
-        body: JSON.stringify({
-            offset: 0,
-            count: 10,
-        }),
-        mode: 'cors',
         headers: {
             Accept: 'application/json',
-            'Access-Control-Allow-Origin':'*'
         }
     })
     const response = await request.json()
-    return response.messages
+    //console.log(response)
+    return response.map((el: any) => responseToMessageData(el))
 }
 
 const MessagesApi = {

@@ -1,5 +1,7 @@
+import { HubConnection } from "@microsoft/signalr"
 import { declareAction } from "@reatom/core"
 import { MessagesApi } from "../../api/messagesApi"
+import { authActions } from "../../auth/model/auth"
 import { declareAsyncAction } from "../../core/reatom/declareAsyncAction"
 import { declareAtomWithSetter } from "../../core/reatom/declareAtomWithSetter"
 import { messagesActions } from "./message"
@@ -8,11 +10,8 @@ import { MessageData } from "./MessageData"
 const sendMessage = declareAsyncAction<Omit<MessageData, 'id'>>(
     'send',
     async (messageData, store) => {
-        const { id } = await MessagesApi.createMessage(messageData)
-        store.dispatch(messagesActions.updateMessage({
-            ...messageData,
-            id
-        }))
+        const connection = store.getState(connectionAtom)
+        connection?.invoke('Send', messageData.text, messageData.userName)
     }
 )
 
@@ -56,6 +55,10 @@ export const [textAtom, setText] = declareAtomWithSetter<string>('text', '', on 
     on(sendMessage, () => ''),
     on(editMessage, () => ''),
     on(editingMessage, (_, value) => value),
+])
+
+export const [connectionAtom, setConnection] = declareAtomWithSetter<HubConnection|null>('connection', null, on => [
+    on(authActions.logout, () => null),
 ])
 
 export const mainActions = {

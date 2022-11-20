@@ -19,6 +19,7 @@ async function getUser(userData: UserData): Promise<UserApiResponse> {
     })
     const response = await request.status
     console.log(JSON.stringify({'Name': userData.name, 'Password': userData.password}), response)
+    //return {status: true}
     return {status: response === HttpStatus.OK}
 }
 
@@ -34,7 +35,6 @@ async function createUser(userData: UserData): Promise<UserApiResponse> {
     const response = await request.status
     console.log(JSON.stringify({'Name': userData.name, 'Password': userData.password}), response)
     return {status: response === HttpStatus.OK}
-    //return {status: true}
 }
 
 const UserApi = {

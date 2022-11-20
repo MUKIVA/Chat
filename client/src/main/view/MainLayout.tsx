@@ -8,11 +8,11 @@ import TextArea from 'antd/lib/input/TextArea';
 import { UserData } from '../../auth/model/userData';
 import { MessageData } from '../model/MessageData';
 import { messagesAtom } from '../model/message';
-import { mainActions, setText, textAtom } from '../model/main';
+import { connectionAtom, mainActions, setConnection, setText, textAtom } from '../model/main';
 import { authActions, authAtoms } from '../../auth/model/auth';
 import { MessageBlock } from './MessageBlock';
 import { List } from 'antd';
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { HttpTransportType, HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 
 const logoutButtonStyle: React.CSSProperties = {
     marginRight: 20,
@@ -63,29 +63,47 @@ export function MainLayout() {
         }
     }
 
-    // useEffect(() => {
-    //     handleLoadMessages()
-    // }, [isAuth]);
+    useEffect(() => {
+        handleLoadMessages()
+    }, [isAuth]);
 
-    const [ connection, setConnection ] = useState<HubConnection|null>(null);
+    const connection = useAtom(connectionAtom)
+    const handleSetConnection = useAction(setConnection)
 
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
-            .withUrl('https://localhost:5000/api/chat')
+            .withUrl('http://localhost:5000/chat', {
+                skipNegotiation: true,
+                transport: HttpTransportType.WebSockets,
+            })
             .withAutomaticReconnect()
             .build();
 
-        setConnection(newConnection);
-    }, [isAuth]);
+        handleSetConnection(newConnection);
+        //console.log(newConnection)
+    }, []);
 
     useEffect(() => {
         if (connection) {
             connection.start()
                 .then(result => {
-                    handleLoadMessages()
+                    //console.log('Connected!');
+    
+                    connection.on('Receive', (id, message, userName, time) => {
+                        console.log(id, message, userName, new Date(time))
+                        handleLoadMessages()
+                    });
+                    
                 })
                 .catch(e => console.log('Connection failed: ', e));
         }
+        // if (connection) {
+        //     connection.start()
+        //         .then(result => {
+        //             handleLoadMessages()
+        //         })
+        //         .catch(e => console.log('Connection failed: ', e));
+        // }
     }, [connection]);
 
     if (!isAuth) {
