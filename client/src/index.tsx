@@ -5,13 +5,16 @@ import App from './app/App';
 import reportWebVitals from './reportWebVitals';
 import { createStore } from '@reatom/core';
 import { context } from '@reatom/react';
+import {BrowserRouter as Router} from 'react-router-dom';
 
-const store = createStore();
+export const store = createStore();
 
 ReactDOM.render(
   <React.StrictMode>
     <context.Provider value={store}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </context.Provider>
   </React.StrictMode>,
   document.getElementById('root')
