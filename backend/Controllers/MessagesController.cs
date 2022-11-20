@@ -16,7 +16,8 @@ namespace backend.Controllers
             var message = await JsonSerializer.DeserializeAsync<MessageModel>(Request.Body);
             try
             {
-                await DbExpressions.AddMessage(message!.Name, message!.Msg);
+                int id = await DbExpressions.AddMessage(message!.Name, message!.Msg);
+                Console.WriteLine(id);
             }
             catch (Exception ex)
             {
@@ -34,6 +35,38 @@ namespace backend.Controllers
             {
                 var data = await DbExpressions.GetMessagesRange(offset, count);
                 return Json(data);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [Route("api/messages/delete_message")]
+        [HttpGet]
+        public async Task<IActionResult> DeleteMessage(int id)
+        {
+            try
+            {
+                await DbExpressions.DeleteMessage(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [Route("api/messages/update_message")]
+        [HttpGet]
+        public async Task<IActionResult> UpdateMessage(int id, string msg)
+        {
+            try
+            {
+                await DbExpressions.UpdateMessage(id, msg);
+                return Ok();
             }
             catch (Exception ex)
             {

@@ -27,14 +27,38 @@ public class UsersController : Controller
         }
     }
 
-    [Route("api/users/add_user")]
+    [Route("api/user_register_status")]
+    [HttpGet]
+    public async Task<IActionResult> GetUserRegisterStatus(string name)
+    {
+        try
+        {
+            var users = await DbExpressions.GetAllUsers();
+            var result = users.FirstOrDefault(x => x.Name == name);
+            if (result != null)
+            {
+                return Ok();
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return BadRequest();
+        }
+    }
+
+    [Route("api/users/register_user")]
     [HttpPost]
-    public async Task<IActionResult> AddUser()
+    public async Task<IActionResult> RegisterUser()
     {
         var user = await JsonSerializer.DeserializeAsync<UserModel>(Request.Body);
         try
         {
-            await DbExpressions.AddUser(user!.Name);
+            await DbExpressions.AddUser(user!.Name, user!.Password);
         }
         catch (Exception ex)
         {
