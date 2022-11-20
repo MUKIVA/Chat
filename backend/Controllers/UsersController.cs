@@ -27,7 +27,7 @@ public class UsersController : Controller
         }
     }
 
-    [Route("api/user_register_status")]
+    [Route("api/users/register_status")]
     [HttpGet]
     public async Task<IActionResult> GetUserRegisterStatus(string name)
     {
@@ -66,5 +66,30 @@ public class UsersController : Controller
             return BadRequest();
         }
         return Ok();
+    }
+
+    [Route("api/users/login")]
+    [HttpPost]
+    public async Task<IActionResult> LogInUser()
+    {
+        var user = await JsonSerializer.DeserializeAsync<UserModel>(Request.Body);
+        try
+        {
+            var users = await DbExpressions.GetAllUsers();
+            var result = users.FirstOrDefault(x => x.Name == user!.Name && x.Password == user.Password);
+            if (result != null)
+            {
+                return Ok();
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return BadRequest();
+        }
     }
 }
