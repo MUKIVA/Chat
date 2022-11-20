@@ -38,13 +38,13 @@
 
 .list {
     overflow-y: auto;
-    /* scroll-snap-type: y mandatory; */
-    /* scroll-snap-align: start; */
+    width: 50vw;
+    max-width: 50vw;
     height: 88vh;
     max-height: 88vh;
     display: flex;
     flex-direction: column-reverse;
-    align-items: flex-end;
+    align-items: flex-start;
 }
 
 .buttonsBlock {
@@ -68,11 +68,6 @@
   }
 
 .enterBlock {
-    /* width: 100%;
-    position: fixed;
-    top: calc(100vh - 60px);
-    left: 0;
-    z-index: 999; */
     display: flex;
     flex-direction: row;
     align-items: flex-end;

@@ -3,8 +3,7 @@ import { useAction, useAtom } from '@reatom/react'
 import { Redirect } from 'react-router-dom'
 import { Button, Form, Input } from 'antd'
 import styles from "./Auth.module.css"
-import { isAuthAtom, login } from '../model/auth'
-import { users } from '../../main/model/MockMessages'
+import { authActions, authAtoms } from '../model/auth'
 
 const buttonStyle: React.CSSProperties = {
     backgroundColor: '#2b2b2b',
@@ -17,35 +16,38 @@ const inputStyle: React.CSSProperties = {
 }
 
 export function AuthLayout() {   
-    const isAuth = useAtom(isAuthAtom)
-    const handleLogin = useAction(login)
+    const isAuth = useAtom(authAtoms.isAuthAtom)
+    const currUser = useAtom(authAtoms.currUserAtom)
+    const handleLogin = useAction(authActions.login)
+    const handleRegister = useAction(authActions.register)
 
-    const [userName, setUserName] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [error, setError] = useState<number>(0);
+    const userName = useAtom(authAtoms.userNameAtom)
+    const password = useAtom(authAtoms.passwordAtom)
+
+    const handleSetUserName = useAction(authActions.setUserName)
+    const handleSetPassword = useAction(authActions.setPassword)
+
+    const loginError = useAtom(authAtoms.loginErrorAtom)
+    const registerError = useAtom(authAtoms.registerErrorAtom)
 
     const onLogIn = () => {
-        setError((users.includes({name: userName, password: password})) ? 0 : 1)
-        if ((error !== 1) && userName && password) {
+        if (userName && password) {
             handleLogin({
                 name: userName,
                 password: password,
             })
-            console.log('Log!', userName, password, error);
+            //console.log('Login', currUser);
         }
-        else console.log('Log?', userName, password, error);
     };
     
     const onRegister = () => {
-        setError(((users.filter((user) => user.name === userName)).length !== 0) ? 2 : 0)
-        if ((error !== 2) && userName && password) {
-            handleLogin({
+        if (userName && password) {
+            handleRegister({
                 name: userName,
                 password: password,
             })
-            console.log('Reg!', userName, password, error);
+            //console.log('Reg', currUser);
         }
-        else console.log('Reg?', userName, password, error);
     };
 
     if (isAuth) {
@@ -68,22 +70,22 @@ export function AuthLayout() {
                     label="Username"
                     name="userName"
                     rules={[{ required: true, message: 'Please input your username' }]}
-                    validateStatus={(error !== 0) ? 'error' : 'success'}
-                    help={(error === 1) ? 'Incorrect username or password' : (error === 2) ? 'Username already exists :c' : ''}
+                    validateStatus={(loginError || registerError) ? 'error' : 'success'}
+                    help={(loginError) ? 'Incorrect username or password' : (registerError) ? 'Username already exists :c' : ''}
                     style={inputStyle}
                 >
-                    <Input value={userName} onChange={e => setUserName(e.target.value.trim())} style={inputStyle} />
+                    <Input value={userName} onChange={e => handleSetUserName(e.target.value.trim())} style={inputStyle} />
                 </Form.Item>
 
                 <Form.Item
                     label="Password"
                     name="password"
                     rules={[{ required: true, message: 'Please input your password' }]}
-                    validateStatus={(error === 1) ? 'error' : 'success'}
-                    help={(error === 1) ? 'Incorrect username or password' : ''}
+                    validateStatus={(loginError) ? 'error' : 'success'}
+                    help={(loginError) ? 'Incorrect username or password' : ''}
                     style={inputStyle}
                 >
-                    <Input.Password  value={password} onChange={e => setPassword(e.target.value)} style={inputStyle} />
+                    <Input.Password  value={password} onChange={e => handleSetPassword(e.target.value)} style={inputStyle} />
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

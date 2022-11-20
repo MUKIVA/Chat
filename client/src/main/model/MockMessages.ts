@@ -1,20 +1,4 @@
-import { UserData } from '../../auth/model/userData'
 import { MessageData } from './MessageData'
-
-export const users: UserData[] = [
-    {
-        name: 'ravenorth',
-        password: 'qwerty1',
-    },
-    {
-        name: 'mukiva',
-        password: 'qwerty1',
-    },
-    {
-        name: 'somebody',
-        password: '1',
-    }
-]
 
 export const mockMessages: MessageData[] = [
     {

@@ -1,33 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAction, useAtom } from '@reatom/react';
-import { Avatar, Comment, Tooltip } from 'antd';
-import { del, edit, editing, emptyMsg, MessageData, messagesListAtom, send, setText, textAtom } from '../model/MessageData';
 import 'antd/dist/antd.css';
 import { Redirect } from 'react-router-dom';
-import { currUserAtom, isAuthAtom, logout } from '../../auth/model/auth';
 import styles from "./MainLayout.module.css"
-import { UploadOutlined, SendOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons"
+import { UploadOutlined, SendOutlined } from "@ant-design/icons"
 import TextArea from 'antd/lib/input/TextArea';
 import { UserData } from '../../auth/model/userData';
-
-function dateToString(date: Date): string {
-    return date.toLocaleTimeString() + ' ' + date.toLocaleDateString();
-}
-
-const msgStyle: React.CSSProperties = {
-    marginLeft: 15,
-    marginRight: 15,
-}
-
-const currUserMsgStyle: React.CSSProperties = {
-    ...msgStyle,
-    alignSelf: 'flex-start',
-}
-
-const msgButtonStyle: React.CSSProperties = {
-    marginLeft: 10,
-    color: '#c9c9c9'
-}
+import { MessageData } from '../model/MessageData';
+import { messagesAtom } from '../model/message';
+import { mainActions, setText, textAtom } from '../model/main';
+import { authActions, authAtoms } from '../../auth/model/auth';
+import { MessageBlock } from './MessageBlock';
+import { List } from 'antd';
 
 const logoutButtonStyle: React.CSSProperties = {
     marginRight: 20,
@@ -42,9 +26,8 @@ const sendButtonStyle: React.CSSProperties = {
     color: '#2b2b2b',
 }
 
-function createNewMessage(currUser: UserData|null, index: number, text: string): MessageData {
+function createNewMessage(currUser: UserData|null, text: string): Omit<MessageData, 'id'> {
     return {
-        id: (index + 1).toString(),
         userName: currUser?.name || '',
         text: text,
         time: new Date(),
@@ -52,17 +35,16 @@ function createNewMessage(currUser: UserData|null, index: number, text: string):
 }
 
 export function MainLayout() {                                                                                                                                                                                                                                                                                                                                                                                          
-    const currUser = useAtom(currUserAtom)
-    const messagesList = useAtom(messagesListAtom)
+    const currUser = useAtom(authAtoms.currUserAtom)
+    const messagesList = useAtom(messagesAtom)
     const text = useAtom(textAtom)
-    const isAuth = useAtom(isAuthAtom)
-    const handleLogout = useAction(logout)
-    const handleSend = useAction(send)
-    const handleEdit = useAction(edit)
-    const handleDel = useAction(del)
+    const isAuth = useAtom(authAtoms.isAuthAtom)
+    const handleLogout = useAction(authActions.logout)
+    const handleLoadMessages = useAction(mainActions.loadMessages)
+    const handleSend = useAction(mainActions.sendMessage)
+    const handleEdit = useAction(mainActions.editMessage)
     const handleSetText = useAction(setText)
-    const handleSetEditing = useAction(editing)
-
+    
     const [editingMsg, setEditingMsg] = useState<MessageData|null>(null);
 
     const onLogOut = () => {
@@ -70,21 +52,19 @@ export function MainLayout() {
         console.log('Logout');
     };
 
-    const onEditClick = (msg: MessageData) => {
-        setEditingMsg(msg);
-        handleSetEditing(msg.text);
-        console.log('edit:', msg.id)
-    };
-
     const onEnter = () => {
         if (editingMsg) {
-            if (text) handleEdit({msg: editingMsg || emptyMsg, newText: text})
+            if (text) handleEdit({...editingMsg, text: text})
             else setEditingMsg(null)
         }
         else {
-            if (text) handleSend(createNewMessage(currUser, messagesList.length, text))
+            if (text) handleSend(createNewMessage(currUser, text))
         }
     }
+
+    useEffect(() => {
+        handleLoadMessages()
+    }, [isAuth]);
 
     if (!isAuth) {
         return <Redirect to={'/auth'} />
@@ -97,30 +77,15 @@ export function MainLayout() {
                 <UploadOutlined rotate={90} style={logoutButtonStyle} size={100} onClick={onLogOut} />
             </div>
             <div className={styles.chat}>
-                <div className={styles.list}>
-                    {messagesList.slice(0).reverse().map((msg: MessageData) => <Comment
-                            actions={[]}
-                            author={(currUser?.name !== msg.userName) ? <a className={styles.userName}>{msg.userName}</a> : <></>}
-                            avatar={(currUser?.name !== msg.userName) ? <Avatar style={{ backgroundColor: '#f56a00', fontSize: 20 }} size={40}>{msg.userName[0]}</Avatar> : <></>}
-                            content={<>
-                                <p className={styles.text}>{msg.text}</p>
-                                {(currUser?.name === msg.userName) ?
-                                    <div className={styles.buttonsBlock}>
-                                        <EditOutlined size={22} style={msgButtonStyle} onClick={() => onEditClick(msg)} />
-                                        <DeleteOutlined size={22} style={msgButtonStyle} onClick={() => handleDel(msg.id)} />
-                                    </div> : 
-                                    <></>
-                                }
-                            </>}
-                            datetime={
-                                <Tooltip>
-                                    <span style={{margin:-8}}>{dateToString(msg.time)}</span>
-                                </Tooltip>
-                            }
-                            style={(currUser?.name !== msg.userName) ? currUserMsgStyle : msgStyle}
-                            key={msg.id}
-                        />)}
-                </div>
+                <List
+                    className={styles.list}
+                    split={false}
+                    itemLayout="horizontal"
+                    dataSource={Object.values(messagesList)}
+                    renderItem={(msg) => (
+                        <MessageBlock msg={msg} setEditingMsg={setEditingMsg} />
+                    )}
+                />
                 <div className={styles.enterBlock}>
                     <TextArea
                         value={text}
