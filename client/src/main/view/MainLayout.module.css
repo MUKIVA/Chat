@@ -30,7 +30,7 @@
     background-color: rgb(255, 255, 255);
     width: 50vw;
     height: max-content;
-    max-height: calc(1030 / 1080)+'vh';
+    max-height: calc(1030 / 1080 * 100)+'vh';
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -46,6 +46,20 @@
     flex-direction: column-reverse;
     align-items: flex-start;
 }
+
+.list::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .list::-webkit-scrollbar-track {
+    background-color: none;
+    border-radius: 100px;
+  }
+    
+  .list::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+    border-radius: 100px;
+  }
 
 .buttonsBlock {
     display: flex;
@@ -70,6 +84,7 @@
 .enterBlock {
     display: flex;
     flex-direction: row;
+    height: 32px;
     align-items: flex-end;
     margin: 10px;
 }

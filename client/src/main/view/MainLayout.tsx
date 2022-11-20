@@ -66,6 +66,12 @@ export function MainLayout() {
         handleLoadMessages()
     }, [isAuth]);
 
+    // useSignalREffect(
+    //     "messages",
+    //     () => {},
+    //     [messagesList],
+    // );
+
     if (!isAuth) {
         return <Redirect to={'/auth'} />
     }
@@ -99,4 +105,8 @@ export function MainLayout() {
             </div>
         </div>
     )
+}
+
+function useSignalREffect(arg0: string, arg1: (message: any) => void, arg2: { [item: string]: MessageData; }[]) {
+    throw new Error('Function not implemented.');
 }
