@@ -14,9 +14,9 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies
-        run: dotnet restore backend
-        run: dotnet restore BackendTests
+        run: dotnet restore ./backend
+        run: dotnet restore ./BackendTests
       - name: Build
-        run: dotnet build backend --configuration Release --no-restore
+        run: dotnet build ./backend --configuration Release --no-restore
       - name: Test
-        run: dotnet test BackendTests --no-restore --verbosity normal
+        run: dotnet test ./BackendTests --no-restore --verbosity normal
