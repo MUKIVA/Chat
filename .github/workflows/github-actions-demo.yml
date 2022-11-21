@@ -1,4 +1,4 @@
-name: GitHub Backend Actions
+name: GitHub Actions
 on:
   push:
     branches: [ dev ]
@@ -22,8 +22,6 @@ jobs:
         run: dotnet build ./backend --configuration Release --no-restore
       - name: Test
         run: dotnet test ./BackendTests --no-restore --verbosity normal
-
-name: GitHub Actions Demo
 on:
   push:
     branches: [ front ]
