@@ -109,10 +109,15 @@ export function MainLayout() {
                     });
 
                     connection.on('Update', (id, msg) => {
-                        const editedMsg: MessageData = messagesList.find(msg => {
-                            return msg.id ===id
-                        }) || emptyMsg
-                        handleUpdateItem({...editedMsg, text: msg})
+                        // const editedMsg: MessageData = messagesList.find(msg => {
+                        //     return msg.id ===id
+                        // }) || emptyMsg
+                        handleUpdateItem({
+                            id: id,
+                            userName: '!',
+                            text: msg,
+                            time: new Date()
+                        })
                     });
                     
                 })
