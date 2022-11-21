@@ -45,7 +45,7 @@ export function MessageBlock({
     const handleSetEditingMsg = useAction(mainActions.setEditingMessageId)
 
     const onEditClick = (msg: MessageData) => {
-        console.log('create input:', msg)
+        //console.log('create input:', msg)
         handleSetEditingMsg(msg.id)
         handleSetText(msg.text)
     };

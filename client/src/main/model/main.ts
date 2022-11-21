@@ -30,14 +30,7 @@ export type EditMessagePayload = {
 const editMessage = declareAsyncAction<EditMessagePayload>(
     'edit',
     async (payload, store) => {
-        console.log('input:', payload.id)
-        // store.dispatch(messagesActions.updateMessage({
-        //     id: payload.id,
-        //     userName: '!',
-        //     text: payload.text,
-        //     time: new Date()
-        // }))
-
+        //console.log('input:', payload.id)
         const connection = store.getState(connectionAtom)
         await connection?.invoke('Update', payload.id, payload.text)
     }

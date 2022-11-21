@@ -6,7 +6,7 @@ import styles from "./MainLayout.module.css"
 import { UploadOutlined, SendOutlined } from "@ant-design/icons"
 import TextArea from 'antd/lib/input/TextArea';
 import { UserData } from '../../auth/model/userData';
-import { emptyMsg, MessageData } from '../model/MessageData';
+import { MessageData } from '../model/MessageData';
 import { messagesActions, messagesAtom } from '../model/message';
 import { mainActions, mainAtoms } from '../model/main';
 import { authActions, authAtoms } from '../../auth/model/auth';
@@ -97,8 +97,8 @@ export function MainLayout() {
                 .then(() => {
                     connection.on('Receive', (id, message, userName, time) => {
                         handleUpdateItem({
-                            id: id,
-                            userName: userName,
+                            id,
+                            userName,
                             text: message,
                             time: new Date(time),
                         })
@@ -109,12 +109,18 @@ export function MainLayout() {
                     });
 
                     connection.on('Update', (id, msg) => {
-                        // const editedMsg: MessageData = messagesList.find(msg => {
+                        // let editedMsg: MessageData = messagesList.find(msg => {
                         //     return msg.id ===id
                         // }) || emptyMsg
+                        // editedMsg.text = msg
+                        // handleUpdateItem(
+                        //     editedMsg
+                        //     id: id,
+                        //     text: msg
+                        // )
                         handleUpdateItem({
                             id: id,
-                            userName: '!',
+                            userName: '!!',
                             text: msg,
                             time: new Date()
                         })
