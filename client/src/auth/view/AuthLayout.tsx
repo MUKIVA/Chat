@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useAction, useAtom } from '@reatom/react'
 import { Redirect } from 'react-router-dom'
 import { Button, Form, Input } from 'antd'
@@ -17,7 +17,6 @@ const inputStyle: React.CSSProperties = {
 
 export function AuthLayout() {   
     const isAuth = useAtom(authAtoms.isAuthAtom)
-    const currUser = useAtom(authAtoms.currUserAtom)
     const handleLogin = useAction(authActions.login)
     const handleRegister = useAction(authActions.register)
 
@@ -36,7 +35,6 @@ export function AuthLayout() {
                 name: userName,
                 password: password,
             })
-            //console.log('Login', currUser);
         }
     };
     
@@ -46,7 +44,6 @@ export function AuthLayout() {
                 name: userName,
                 password: password,
             })
-            //console.log('Reg', currUser);
         }
     };
 
@@ -61,8 +58,6 @@ export function AuthLayout() {
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 initialValues={{ remember: true }}
-                // onFinish={onLogIn}
-                // onFinishFailed={onFinishFailed}
                 autoComplete="on"
                 style={{marginRight: 100, marginTop: 50}}
             >

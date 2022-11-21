@@ -1,61 +1,22 @@
-import { resolve } from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import { HttpStatus } from '../core/http/HttpStatus';
 import { MessageData } from '../main/model/MessageData';
-import { mockMessages } from '../main/model/MockMessages';
-
-const BASE_URL = 'http://localhost:5000/api/messages/'
+import { urls } from './urls';
 
 export type EditMessageApiPayload = {
     id: string,
     text: string,
 }
 
-async function createMessage(messageData: Omit<MessageData, 'id'>): Promise<{id: string}> {
-    const url = BASE_URL + 'add_message'
-    const request = await fetch(url, {
-        method: 'GET',
-        body: JSON.stringify(messageData),
-        //mode: 'cors',
-        headers: {
-            Accept: 'application/json',
-            //'Access-Control-Allow-Origin':'*'
-        }
-    })
-    const response = await request.json()
-    console.log(response)
+function responseToMessageData(item: any): MessageData {
     return {
-        id: uuidv4()
-    }
-}
-
-function deleteMessage(id: string): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
-    })
-}
-
-function editMessage(messageData: EditMessageApiPayload): Promise<void> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, 1000)
-    })
-}
-
-function responseToMessageData(resp: any): MessageData {
-    return {
-        id: resp.id,
-        userName: resp.name,
-        text: resp.msg,
-        time: new Date(resp.timeMs),
+        id: item.id,
+        userName: item.name,
+        text: item.msg,
+        time: new Date(item.timeMs),
     }
 }
 
 async function getMessages(): Promise<MessageData[]> {
-    const url = BASE_URL + 'get_message_range' + '?offset=0&count=100'
+    const url = urls.MESSAGES_API_URL + 'get_message_range?offset=' + 0 + '&count=' + 100
     const request = await fetch(url, {
         method: 'GET',
         headers: {
@@ -63,14 +24,10 @@ async function getMessages(): Promise<MessageData[]> {
         }
     })
     const response = await request.json()
-    //console.log(response)
-    return response.map((el: any) => responseToMessageData(el))
+    return response.map((item: any) => responseToMessageData(item))
 }
 
 const MessagesApi = {
-    createMessage,
-    deleteMessage,
-    editMessage,
     getMessages,
 }
 

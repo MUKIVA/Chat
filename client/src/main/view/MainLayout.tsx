@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useAction, useAtom } from '@reatom/react';
 import 'antd/dist/antd.css';
 import { Redirect } from 'react-router-dom';
@@ -6,13 +6,14 @@ import styles from "./MainLayout.module.css"
 import { UploadOutlined, SendOutlined } from "@ant-design/icons"
 import TextArea from 'antd/lib/input/TextArea';
 import { UserData } from '../../auth/model/userData';
-import { MessageData } from '../model/MessageData';
+import { emptyMsg, MessageData } from '../model/MessageData';
 import { messagesActions, messagesAtom } from '../model/message';
-import { connectionAtom, mainActions, setConnection, setText, textAtom } from '../model/main';
+import { mainActions, mainAtoms } from '../model/main';
 import { authActions, authAtoms } from '../../auth/model/auth';
 import { MessageBlock } from './MessageBlock';
 import { List } from 'antd';
 import { HttpTransportType, HubConnectionBuilder } from '@microsoft/signalr';
+import { urls } from '../../api/urls';
 
 const logoutButtonStyle: React.CSSProperties = {
     marginRight: 20,
@@ -36,45 +37,56 @@ function createNewMessage(currUser: UserData|null, text: string): Omit<MessageDa
 }
 
 export function MainLayout() {                                                                                                                                                                                                                                                                                                                                                                                          
-    const currUser = useAtom(authAtoms.currUserAtom)
-    const messagesList = useAtom(messagesAtom)
-    const text = useAtom(textAtom)
     const isAuth = useAtom(authAtoms.isAuthAtom)
-    const handleLogout = useAction(authActions.logout)
-    const handleLoadMessages = useAction(mainActions.loadMessages)
-    const handleSend = useAction(mainActions.sendMessage)
-    const handleEdit = useAction(mainActions.editMessage)
-    const handleSetText = useAction(setText)
-    const handleDeleteItem = useAction(messagesActions.removeMessage)
-    const handleUpdateItem = useAction(messagesActions.updateMessage)
     
-    const [editingMsg, setEditingMsg] = useState<MessageData|null>(null);
+    const currUser = useAtom(authAtoms.currUserAtom)
+    const handleLogout = useAction(authActions.logout)
 
     const onLogOut = () => {
         handleLogout()
-        console.log('Logout');
     };
 
+    const messages = useAtom(messagesAtom)
+    const text = useAtom(mainAtoms.textAtom)
+    const editingMsgId = useAtom(mainAtoms.editingMessageIdAtom)
+    const handleLoadMessages = useAction(mainActions.loadMessages)
+    const handleSend = useAction(mainActions.sendMessage)
+    const handleEdit = useAction(mainActions.editMessage)
+    const handleSetText = useAction(mainActions.setText)
+    //const handleSetEditingMsg = useAction(mainActions.setEditingMessage)
+    const handleDeleteItem = useAction(messagesActions.removeMessage)
+    const handleUpdateItem = useAction(messagesActions.updateMessage)
+    const handleNewItems = useAction(messagesActions.setNewMessages)
+
+    // const latestList = useRef<MessageData[]|null>(null)
+    // latestList.current = Object.values(messagesList)
+
+    useEffect(() => {
+        handleLoadMessages()
+    }, [isAuth, handleLoadMessages]);
+
+    const messagesList: MessageData[] = useMemo(() => Object.values(messages), [messages]);
+
     const onEnter = () => {
-        if (editingMsg) {
-            if (text) handleEdit({...editingMsg, text: text})
-            else setEditingMsg(null)
+        if (editingMsgId) {
+            if (text) handleEdit({
+                id: editingMsgId,
+                text,
+            })
+            //else setEditingMsg(null)
         }
         else {
             if (text) handleSend(createNewMessage(currUser, text))
         }
+        //handleSetEditingMsg(null)
     }
 
-    useEffect(() => {
-        handleLoadMessages()
-    }, [isAuth]);
-
-    const connection = useAtom(connectionAtom)
-    const handleSetConnection = useAction(setConnection)
+    const connection = useAtom(mainAtoms.connectionAtom)
+    const handleSetConnection = useAction(mainActions.setConnection)
 
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5000/chat', {
+            .withUrl(urls.HUB_URL, {
                 skipNegotiation: true,
                 transport: HttpTransportType.WebSockets,
             })
@@ -82,37 +94,43 @@ export function MainLayout() {
             .build();
 
         handleSetConnection(newConnection);
-    }, []);
+    }, [handleSetConnection]);
 
     useEffect(() => {
         if (connection) {
             connection.start()
-                .then(result => {
+                .then(() => {
                     connection.on('Receive', (id, message, userName, time) => {
-                        //console.log(id, message, userName, new Date(time))
-                        handleUpdateItem({
-                            id: id,
-                            userName: userName,
-                            text: message,
-                            time: new Date(time),
-                        })
+                        console.log(id)
+                        // handleUpdateItem({
+                        //     id: id,
+                        //     userName: userName,
+                        //     text: message,
+                        //     time: new Date(time),
+                        // })
+                        handleNewItems([...messagesList, {
+                                id: id,
+                                userName: userName,
+                                text: message,
+                                time: new Date(time),
+                            }])
                     });
 
                     connection.on('Delete', (id) => {
-                        console.log(id)
                         handleDeleteItem([id])
                     });
 
                     connection.on('Update', (id, msg) => {
-                        console.log(id, msg)
-                        const editedMsg: MessageData = Object.values(messagesList).filter((item) => item.id === id)[0]//
+                        const editedMsg: MessageData = messagesList.find(msg => {
+                            return msg.id ===id
+                        }) || emptyMsg
                         handleUpdateItem({...editedMsg, text: msg})
                     });
                     
                 })
-                .catch(e => console.log('Connection failed: ', e));
+                //.catch(e => console.log('Connection failed: ', e));
         }
-    }, [connection]);
+    }, [connection, messagesList, handleDeleteItem, handleUpdateItem]);
 
     if (!isAuth) {
         return <Redirect to={'/auth'} />
@@ -129,9 +147,9 @@ export function MainLayout() {
                     className={styles.list}
                     split={false}
                     itemLayout="horizontal"
-                    dataSource={Object.values(messagesList)}
-                    renderItem={(msg?) => (
-                        <MessageBlock msg={msg} setEditingMsg={setEditingMsg} />
+                    dataSource={messagesList}
+                    renderItem={(msg) => (
+                        <MessageBlock msg={msg} />
                     )}
                 />
                 <div className={styles.enterBlock}>

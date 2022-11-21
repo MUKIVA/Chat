@@ -6,6 +6,7 @@ const {
     updateItems: updateMessages,
     updateItem: updateMessage,
     removeItems: removeMessage,
+    setNewItems: setNewMessages,
 } = declareMapAtom<MessageData>(
     'messages',
     message => message.id,
@@ -15,6 +16,7 @@ const messagesActions = {
     updateMessages,
     updateMessage,
     removeMessage,
+    setNewMessages,
 }
 
 export {

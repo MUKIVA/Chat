@@ -34,26 +34,26 @@ const msgButtonStyle: React.CSSProperties = {
 
 type MessageBlockProps = {
     msg: MessageData,
-    setEditingMsg: Function,
 }
 
 export function MessageBlock({
     msg,
-    setEditingMsg,
 }: MessageBlockProps) {
     const currUser = useAtom(authAtoms.currUserAtom)
     const handleDel = useAction(mainActions.deleteMessage)
-    const handleSetEditing = useAction(mainActions.editingMessage)
+    const handleSetText = useAction(mainActions.setText)
+    const handleSetEditingMsg = useAction(mainActions.setEditingMessageId)
 
     const onEditClick = (msg: MessageData) => {
-        setEditingMsg(msg)
-        handleSetEditing(msg.text)
+        console.log('create input', msg)
+        handleSetEditingMsg(msg.id)
+        handleSetText(msg.text)
     };
     
     return (
         <Comment
             actions={[]}
-            author={(currUser?.name !== msg.userName) ? <a className={styles.userName}>{msg.userName}</a> : <></>}
+            author={(currUser?.name !== msg.userName) ? <span className={styles.userName}>{msg.userName}</span> : <></>}
             avatar={(currUser?.name !== msg.userName) ? <Avatar style={avatarStyle} size={40}>{msg.userName[0]}</Avatar> : <></>}
             content={<>
                 <p className={styles.text}>{msg.text}</p>

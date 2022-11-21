@@ -1,5 +1,4 @@
 import { HubConnection } from "@microsoft/signalr"
-import { declareAction } from "@reatom/core"
 import { MessagesApi } from "../../api/messagesApi"
 import { authActions } from "../../auth/model/auth"
 import { declareAsyncAction } from "../../core/reatom/declareAsyncAction"
@@ -11,7 +10,7 @@ const sendMessage = declareAsyncAction<Omit<MessageData, 'id'>>(
     'send',
     async (messageData, store) => {
         const connection = store.getState(connectionAtom)
-        connection?.invoke('Send', messageData.text, messageData.userName)
+        await connection?.invoke('Send', messageData.text, messageData.userName)
     }
 )
 
@@ -19,15 +18,21 @@ const deleteMessage = declareAsyncAction<string>(
     'delete',
     async (messageId, store) => {
         const connection = store.getState(connectionAtom)
-        connection?.invoke('Delete', messageId)
+        await connection?.invoke('Delete', messageId)
     }
 )
 
-const editMessage = declareAsyncAction<MessageData>(
+export type EditMessagePayload = {
+    id: string,
+    text: string
+}
+
+const editMessage = declareAsyncAction<EditMessagePayload>(
     'edit',
-    async (messageData, store) => {
+    async (payload, store) => {
+        console.log('input:', payload.id)
         const connection = store.getState(connectionAtom)
-        connection?.invoke('Update', messageData.id, messageData.text)
+        await connection?.invoke('Update', payload.id, payload.text)
     }
 )
 
@@ -39,20 +44,16 @@ const loadMessages = declareAsyncAction<void>(
     }
 )
 
-export type EditMessagePayload = {
-    msg: MessageData,
-    newText: string
-}
-
-const editingMessage = declareAction<string>('editing')
-
-export const [textAtom, setText] = declareAtomWithSetter<string>('text', '', on => [
-    on(sendMessage, () => ''),
-    on(editMessage, () => ''),
-    on(editingMessage, (_, value) => value),
+const [editingMessageIdAtom, setEditingMessageId] = declareAtomWithSetter<string|null>('editingMsg', null, on => [
+    on(editMessage, () => null),
 ])
 
-export const [connectionAtom, setConnection] = declareAtomWithSetter<HubConnection|null>('connection', null, on => [
+const [textAtom, setText] = declareAtomWithSetter<string>('text', '', on => [
+    on(sendMessage, () => ''),
+    on(editMessage, () => ''),
+])
+
+const [connectionAtom, setConnection] = declareAtomWithSetter<HubConnection|null>('connection', null, on => [
     on(authActions.logout, () => null),
 ])
 
@@ -60,6 +61,14 @@ export const mainActions = {
     sendMessage,
     deleteMessage,
     editMessage,
-    editingMessage,
+    setEditingMessageId,
     loadMessages,
+    setConnection,
+    setText,
+}
+
+export const mainAtoms = {
+    connectionAtom,
+    textAtom,
+    editingMessageIdAtom,
 }

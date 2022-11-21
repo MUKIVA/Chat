@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import { createStore } from '@reatom/core';
 import { context } from '@reatom/react';
 import {BrowserRouter as Router} from 'react-router-dom';
-import { createSignalRContext } from 'react-signalr';
 
 export const store = createStore()
 
