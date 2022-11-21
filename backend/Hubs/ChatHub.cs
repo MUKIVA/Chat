@@ -11,9 +11,6 @@ namespace backend.Hubs
         public async Task Send(string message, string username)
         {
             int id = await DbExpressions.AddMessage(username, message);
-            Console.WriteLine(DateTime.UtcNow
-                    .Subtract(new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc))
-                    .TotalMilliseconds);
             await Clients.All.SendAsync("Receive", 
             id,
             message, 
