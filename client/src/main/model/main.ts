@@ -23,16 +23,20 @@ const deleteMessage = declareAsyncAction<string>(
 )
 
 export type EditMessagePayload = {
-    id: string,
-    text: string
+    msg: MessageData,
+    newText: string
 }
 
 const editMessage = declareAsyncAction<EditMessagePayload>(
     'edit',
     async (payload, store) => {
-        //console.log('input:', payload.id)
         const connection = store.getState(connectionAtom)
-        await connection?.invoke('Update', payload.id, payload.text)
+        await connection?.invoke('Update', {
+            id: payload.msg.id,
+            userName: payload.msg.userName,
+            text: payload.newText,
+            time: payload.msg.time,
+        })
     }
 )
 
@@ -44,7 +48,7 @@ const loadMessages = declareAsyncAction<void>(
     }
 )
 
-const [editingMessageIdAtom, setEditingMessageId] = declareAtomWithSetter<string|null>('editingMsg', null, on => [
+const [editingMessageAtom, setEditingMessage] = declareAtomWithSetter<MessageData|null>('editingMsg', null, on => [
     on(editMessage, () => null),
 ])
 
@@ -61,7 +65,7 @@ export const mainActions = {
     sendMessage,
     deleteMessage,
     editMessage,
-    setEditingMessageId,
+    setEditingMessage,
     loadMessages,
     setConnection,
     setText,
@@ -70,5 +74,5 @@ export const mainActions = {
 export const mainAtoms = {
     connectionAtom,
     textAtom,
-    editingMessageIdAtom,
+    editingMessageAtom,
 }

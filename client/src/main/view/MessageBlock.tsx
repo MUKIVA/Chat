@@ -42,11 +42,10 @@ export function MessageBlock({
     const currUser = useAtom(authAtoms.currUserAtom)
     const handleDel = useAction(mainActions.deleteMessage)
     const handleSetText = useAction(mainActions.setText)
-    const handleSetEditingMsg = useAction(mainActions.setEditingMessageId)
+    const handleSetEditingMsg = useAction(mainActions.setEditingMessage)
 
     const onEditClick = (msg: MessageData) => {
-        //console.log('create input:', msg)
-        handleSetEditingMsg(msg.id)
+        handleSetEditingMsg(msg)
         handleSetText(msg.text)
     };
     

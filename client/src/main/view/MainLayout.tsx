@@ -48,7 +48,7 @@ export function MainLayout() {
 
     const messages = useAtom(messagesAtom)
     const text = useAtom(mainAtoms.textAtom)
-    const editingMsgId = useAtom(mainAtoms.editingMessageIdAtom)
+    const editingMsg = useAtom(mainAtoms.editingMessageAtom)
     const handleLoadMessages = useAction(mainActions.loadMessages)
     const handleSend = useAction(mainActions.sendMessage)
     const handleEdit = useAction(mainActions.editMessage)
@@ -63,11 +63,8 @@ export function MainLayout() {
     const messagesList: MessageData[] = useMemo(() => Object.values(messages), [messages]);
 
     const onEnter = () => {
-        if (editingMsgId) {
-            if (text) handleEdit({
-                id: editingMsgId,
-                text,
-            })
+        if (editingMsg) {
+            if (text) handleEdit({msg: editingMsg, newText: text})
         }
         else {
             if (text) {
@@ -108,21 +105,12 @@ export function MainLayout() {
                         handleDeleteItem([id])
                     });
 
-                    connection.on('Update', (id, msg) => {
-                        // let editedMsg: MessageData = messagesList.find(msg => {
-                        //     return msg.id ===id
-                        // }) || emptyMsg
-                        // editedMsg.text = msg
-                        // handleUpdateItem(
-                        //     editedMsg
-                        //     id: id,
-                        //     text: msg
-                        // )
+                    connection.on('Update', (msg) => {
                         handleUpdateItem({
-                            id: id,
-                            userName: '!!',
-                            text: msg,
-                            time: new Date()
+                            id: msg.id,
+                            userName: msg.userName,
+                            text: msg.text,
+                            time: new Date(msg.time)
                         })
                     });
                     
