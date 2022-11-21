@@ -13,8 +13,9 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Install dependencies
+      - name: Install dependencies backend
         run: dotnet restore ./backend
+      - name: Install dependencies BackendTests 
         run: dotnet restore ./BackendTests
       - name: Build
         run: dotnet build ./backend --configuration Release --no-restore
