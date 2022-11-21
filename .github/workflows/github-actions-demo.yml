@@ -32,8 +32,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install node modules
-        run: npm install ./clients
+        run: npm install ./client
       - name: Build project
-        run: npm run build ./clients
+        run: npm run build ./client
       - name: Test
-        run: npm run test ./clients
+        run: npm run test ./client
