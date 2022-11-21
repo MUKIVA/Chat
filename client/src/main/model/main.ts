@@ -10,7 +10,7 @@ const sendMessage = declareAsyncAction<Omit<MessageData, 'id'>>(
     'send',
     async (messageData, store) => {
         const connection = store.getState(connectionAtom)
-        await connection?.invoke('Send', messageData.text, messageData.userName)
+        await connection?.invoke('Send', messageData.text.trim(), messageData.userName)
     }
 )
 
@@ -34,7 +34,7 @@ const editMessage = declareAsyncAction<EditMessagePayload>(
         await connection?.invoke('Update', {
             id: payload.msg.id,
             userName: payload.msg.userName,
-            text: payload.newText,
+            text: payload.newText.trim(),
             time: payload.msg.time,
         })
     }

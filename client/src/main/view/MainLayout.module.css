@@ -49,17 +49,17 @@
 
 .list::-webkit-scrollbar {
     width: 8px;
-  }
+}
   
-  .list::-webkit-scrollbar-track {
+.list::-webkit-scrollbar-track {
     background-color: none;
     border-radius: 100px;
-  }
+}
     
-  .list::-webkit-scrollbar-thumb {
+.list::-webkit-scrollbar-thumb {
     background-color: #c1c1c1;
     border-radius: 100px;
-  }
+}
 
 .buttonsBlock {
     display: flex;
@@ -90,7 +90,13 @@
 }
 
 .textInput {
-    
+    resize: none;
+    width: 630px;
+    height: max-content;
+    max-height: 100px;
+    border-radius: 5px;
+    padding: 2px 5px;
+    border-color: rgb(190, 190, 190);
 }
 
 .textInput:hover {
@@ -99,10 +105,25 @@
 
 .textInput:focus {
     border-color: rgb(104, 104, 104);
+    outline: none;
     box-shadow: none;
 }
 
 .textInput::selection {
-    background: none;
-    box-shadow: none;
+    color: inherit;
+    background-color: rgb(190, 190, 190);
+}
+
+.textInput::-webkit-scrollbar {
+    width: 4px;
+}
+  
+.textInput::-webkit-scrollbar-track {
+    background-color: none;
+    border-radius: 100px;
+}
+    
+.textInput::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+    border-radius: 100px;
 }

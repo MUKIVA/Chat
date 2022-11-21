@@ -4,7 +4,6 @@ import 'antd/dist/antd.css';
 import { Redirect } from 'react-router-dom';
 import styles from "./MainLayout.module.css"
 import { UploadOutlined, SendOutlined } from "@ant-design/icons"
-import TextArea from 'antd/lib/input/TextArea';
 import { UserData } from '../../auth/model/userData';
 import { MessageData } from '../model/MessageData';
 import { messagesActions, messagesAtom } from '../model/message';
@@ -140,13 +139,13 @@ export function MainLayout() {
                     )}
                 />
                 <div className={styles.enterBlock}>
-                    <TextArea
+                    <textarea
                         value={text}
-                        onChange={e => handleSetText(e.target.value.trim())}
+                        onChange={e => handleSetText(e.target.value)}
+                        autoFocus
                         placeholder="Type here..."
-                        autoSize={{ minRows: 1, maxRows: 5 }}
                         className={styles.textInput}
-                    />
+                    ></textarea>
                     <SendOutlined style={sendButtonStyle} onClick={onEnter} />
                 </div>
             </div>
