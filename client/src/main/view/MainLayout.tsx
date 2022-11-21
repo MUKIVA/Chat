@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useAction, useAtom } from '@reatom/react';
 import 'antd/dist/antd.css';
 import { Redirect } from 'react-router-dom';
@@ -53,13 +53,8 @@ export function MainLayout() {
     const handleSend = useAction(mainActions.sendMessage)
     const handleEdit = useAction(mainActions.editMessage)
     const handleSetText = useAction(mainActions.setText)
-    //const handleSetEditingMsg = useAction(mainActions.setEditingMessage)
     const handleDeleteItem = useAction(messagesActions.removeMessage)
     const handleUpdateItem = useAction(messagesActions.updateMessage)
-    const handleNewItems = useAction(messagesActions.setNewMessages)
-
-    // const latestList = useRef<MessageData[]|null>(null)
-    // latestList.current = Object.values(messagesList)
 
     useEffect(() => {
         handleLoadMessages()
@@ -73,12 +68,12 @@ export function MainLayout() {
                 id: editingMsgId,
                 text,
             })
-            //else setEditingMsg(null)
         }
         else {
-            if (text) handleSend(createNewMessage(currUser, text))
+            if (text) {
+                handleSend(createNewMessage(currUser, text))
+            }
         }
-        //handleSetEditingMsg(null)
     }
 
     const connection = useAtom(mainAtoms.connectionAtom)
@@ -101,19 +96,12 @@ export function MainLayout() {
             connection.start()
                 .then(() => {
                     connection.on('Receive', (id, message, userName, time) => {
-                        console.log(id)
-                        // handleUpdateItem({
-                        //     id: id,
-                        //     userName: userName,
-                        //     text: message,
-                        //     time: new Date(time),
-                        // })
-                        handleNewItems([...messagesList, {
-                                id: id,
-                                userName: userName,
-                                text: message,
-                                time: new Date(time),
-                            }])
+                        handleUpdateItem({
+                            id: id,
+                            userName: userName,
+                            text: message,
+                            time: new Date(time),
+                        })
                     });
 
                     connection.on('Delete', (id) => {
@@ -128,7 +116,7 @@ export function MainLayout() {
                     });
                     
                 })
-                //.catch(e => console.log('Connection failed: ', e));
+                .catch(e => {});
         }
     }, [connection, messagesList, handleDeleteItem, handleUpdateItem]);
 
