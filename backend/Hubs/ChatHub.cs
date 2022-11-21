@@ -29,10 +29,10 @@ namespace backend.Hubs
             await Clients.All.SendAsync("Delete", id);
         }
 
-        public async Task Update(int id, string msg)
+        public async Task Update(UpdateMessage msg)
         {
-            await DbExpressions.UpdateMessage(id, msg);
-            await Clients.All.SendAsync("Update", id, msg);
+            await DbExpressions.UpdateMessage(msg.id, msg.text);
+            await Clients.All.SendAsync("Update", msg);
         }
     }
 }
