@@ -1,0 +1,52 @@
+.msgBlock_default {
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    padding: 0 12px;
+    margin: 10px 0;
+    max-width: 60%;
+}
+
+.msgBlock_curr {
+    align-self: flex-end;
+}
+
+.avatar {
+    background-color: #f56a00;
+    font-size: 20px;
+}
+
+.buttonsBlock {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 2px;
+}
+
+.button {
+    margin-left: 10px;
+    color: #afafaf;
+    font-size: 15px;
+}
+
+.button:hover {
+    color: #8b8b8b;
+}
+
+.userName {
+    margin-right: 8px;
+    color: #131313;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.text {
+    color: #131313;
+    max-width: 20vw;
+    height: fit-content;
+    word-wrap: break-word;
+}
+
+.time {
+    color: #afafaf;
+    margin: -8px;
+}

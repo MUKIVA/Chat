@@ -3,14 +3,18 @@ import { MessagesApi } from "../../api/messagesApi"
 import { authActions } from "../../auth/model/auth"
 import { declareAsyncAction } from "../../core/reatom/declareAsyncAction"
 import { declareAtomWithSetter } from "../../core/reatom/declareAtomWithSetter"
+import { cleanString } from "../../core/utils/utils"
 import { messagesActions } from "./message"
 import { MessageData } from "./MessageData"
 
 const sendMessage = declareAsyncAction<Omit<MessageData, 'id'>>(
     'send',
     async (messageData, store) => {
-        const connection = store.getState(connectionAtom)
-        await connection?.invoke('Send', messageData.text.trim(), messageData.userName)
+        const validMsg = cleanString(messageData.text)
+        if (validMsg) {
+            const connection = store.getState(connectionAtom)
+            await connection?.invoke('Send', validMsg, messageData.userName)
+        }
     }
 )
 
@@ -30,13 +34,16 @@ export type EditMessagePayload = {
 const editMessage = declareAsyncAction<EditMessagePayload>(
     'edit',
     async (payload, store) => {
-        const connection = store.getState(connectionAtom)
-        await connection?.invoke('Update', {
-            id: payload.msg.id,
-            userName: payload.msg.userName,
-            text: payload.newText.trim(),
-            time: payload.msg.time,
-        })
+        const validMsg = cleanString(payload.newText)
+        if (validMsg) {
+            const connection = store.getState(connectionAtom)
+            await connection?.invoke('Update', {
+                id: payload.msg.id,
+                userName: payload.msg.userName,
+                text: validMsg,
+                time: payload.msg.time,
+            })
+        }
     }
 )
 

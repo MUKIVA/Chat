@@ -28,6 +28,7 @@ export function AuthLayout() {
 
     const loginError = useAtom(authAtoms.loginErrorAtom)
     const registerError = useAtom(authAtoms.registerErrorAtom)
+    const userNameError = useAtom(authAtoms.userNameErrorAtom)
 
     const onLogIn = () => {
         if (userName && password) {
@@ -64,9 +65,13 @@ export function AuthLayout() {
                 <Form.Item
                     label="Username"
                     name="userName"
-                    rules={[{ required: true, message: 'Please input your username' }]}
-                    validateStatus={(loginError || registerError) ? 'error' : 'success'}
-                    help={(loginError) ? 'Incorrect username or password' : (registerError) ? 'Username already exists :c' : ''}
+                    //rules={[{ required: true, message: 'Please input your username' }]}
+                    validateStatus={(loginError || registerError || userNameError) ? 'error' : 'success'}
+                    help={
+                        (loginError) ? 'Incorrect username or password' : 
+                        (registerError) ? 'Username already exists :c' : 
+                        (userNameError) ? 'Incorrect username' : ''
+                    }
                     style={inputStyle}
                 >
                     <Input value={userName} onChange={e => handleSetUserName(e.target.value.trim())} style={inputStyle} />
@@ -75,7 +80,7 @@ export function AuthLayout() {
                 <Form.Item
                     label="Password"
                     name="password"
-                    rules={[{ required: true, message: 'Please input your password' }]}
+                    //rules={[{ required: true, message: 'Please input your password' }]}
                     validateStatus={(loginError) ? 'error' : 'success'}
                     help={(loginError) ? 'Incorrect username or password' : ''}
                     style={inputStyle}

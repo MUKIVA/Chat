@@ -3,34 +3,42 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    height: 100vh;
 }
 
 .panel {
     background-color: #2b2b2b;
-    /* position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999; */
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
     width: 100vw;
-    height: 50px;
+    height: 5%;
+}
+
+.exitButton {
+    margin-right: 25px;
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.exitButton:hover {
+    color: #ff7b00;
 }
 
 .currUser {
     color: rgb(255, 255, 255);
     font-weight: bold;
-    margin-right: 10px;
+    margin-right: 15px;
     margin-bottom: 1px;
 }
 
 .chat {
     background-color: rgb(255, 255, 255);
     width: 50vw;
-    height: max-content;
-    max-height: calc(1030 / 1080 * 100)+'vh';
+    height: 95%;
+    max-height: 95%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -38,10 +46,12 @@
 
 .list {
     overflow-y: auto;
-    width: 50vw;
-    max-width: 50vw;
-    height: 88vh;
-    max-height: 88vh;
+    width: 100%;
+    max-width: 100%;
+    height: 93%;
+    max-height: 93%;
+    padding: 15px;
+    padding-bottom: 0;
     display: flex;
     flex-direction: column-reverse;
     align-items: flex-start;
@@ -57,45 +67,26 @@
 }
     
 .list::-webkit-scrollbar-thumb {
-    background-color: #c1c1c1;
+    background-color: #dbdbdb;
     border-radius: 100px;
 }
-
-.buttonsBlock {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-}
-
-.userName {
-    margin-right: 8px;
-    color: #131313;
-    font-weight: bold;
-    font-size: 15px;
-}
-
-.text {
-    color: #131313;
-    max-width: 20vw;
-    height: fit-content;
-    word-wrap: break-word;
-  }
 
 .enterBlock {
     display: flex;
     flex-direction: row;
-    height: 32px;
-    align-items: flex-end;
-    margin: 10px;
+    align-items: center;
+    height: 7%;
+    background-color: #fff3ea;
+    padding: 10px;
 }
 
 .textInput {
     resize: none;
-    width: 630px;
-    height: max-content;
-    max-height: 100px;
+    width: 96%;
+    height: 95%;
     border-radius: 5px;
-    padding: 2px 5px;
+    border-width: 2px;
+    padding: 4px 10px;
     border-color: rgb(190, 190, 190);
 }
 
@@ -111,7 +102,7 @@
 
 .textInput::selection {
     color: inherit;
-    background-color: rgb(190, 190, 190);
+    background-color: rgb(201, 201, 201);
 }
 
 .textInput::-webkit-scrollbar {
@@ -124,6 +115,17 @@
 }
     
 .textInput::-webkit-scrollbar-thumb {
-    background-color: #c1c1c1;
+    background-color: #dbdbdb;
     border-radius: 100px;
+}
+
+.sendButton {
+    margin-left: 10px;
+    margin-right: 0;
+    color: rgb(66, 66, 66);
+    font-size: 25px;
+}
+
+.sendButton:hover {
+    color: #ff6f00;
 }

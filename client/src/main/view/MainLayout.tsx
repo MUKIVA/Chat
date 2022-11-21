@@ -4,36 +4,14 @@ import 'antd/dist/antd.css';
 import { Redirect } from 'react-router-dom';
 import styles from "./MainLayout.module.css"
 import { UploadOutlined, SendOutlined } from "@ant-design/icons"
-import { UserData } from '../../auth/model/userData';
 import { MessageData } from '../model/MessageData';
 import { messagesActions, messagesAtom } from '../model/message';
 import { mainActions, mainAtoms } from '../model/main';
 import { authActions, authAtoms } from '../../auth/model/auth';
 import { MessageBlock } from './MessageBlock';
-import { List } from 'antd';
 import { HttpTransportType, HubConnectionBuilder } from '@microsoft/signalr';
 import { urls } from '../../api/urls';
-
-const logoutButtonStyle: React.CSSProperties = {
-    marginRight: 20,
-    color: '#ffffff',
-    fontWeight: 'bold'
-}
-
-const sendButtonStyle: React.CSSProperties = {
-    marginLeft: 12,
-    marginRight: 0,
-    marginBottom: 8,
-    color: '#2b2b2b',
-}
-
-function createNewMessage(currUser: UserData|null, text: string): Omit<MessageData, 'id'> {
-    return {
-        userName: currUser?.name || '',
-        text: text,
-        time: new Date(),
-    }
-}
+import { createSendingMessage } from '../../core/utils/utils';
 
 export function MainLayout() {                                                                                                                                                                                                                                                                                                                                                                                          
     const isAuth = useAtom(authAtoms.isAuthAtom)
@@ -59,16 +37,23 @@ export function MainLayout() {
         handleLoadMessages()
     }, [isAuth, handleLoadMessages]);
 
-    const messagesList: MessageData[] = useMemo(() => Object.values(messages), [messages]);
+    const messagesList: MessageData[] = useMemo(() => Object.values(messages).reverse(), [messages]);
 
-    const onEnter = () => {
+    const onSend = () => {
         if (editingMsg) {
             if (text) handleEdit({msg: editingMsg, newText: text})
         }
         else {
             if (text) {
-                handleSend(createNewMessage(currUser, text))
+                handleSend(createSendingMessage(currUser, text))
             }
+        }
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if ((e.key === 'Enter') && !(e.shiftKey)) {
+            e.preventDefault()
+            onSend()
         }
     }
 
@@ -126,27 +111,28 @@ export function MainLayout() {
         <div className={styles.content}>
             <div className={styles.panel}>
                 <label className={styles.currUser}>{currUser?.name}</label>
-                <UploadOutlined rotate={90} style={logoutButtonStyle} size={100} onClick={onLogOut} />
+                <UploadOutlined rotate={90} className={styles.exitButton} onClick={onLogOut} />
             </div>
             <div className={styles.chat}>
-                <List
-                    className={styles.list}
-                    split={false}
-                    itemLayout="horizontal"
-                    dataSource={messagesList}
-                    renderItem={(msg) => (
-                        <MessageBlock msg={msg} />
+                <div className={styles.list}>
+                    {messagesList.map(msg => 
+                        <MessageBlock msg={msg} key={msg.id} />
                     )}
-                />
+                </div>
                 <div className={styles.enterBlock}>
                     <textarea
                         value={text}
                         onChange={e => handleSetText(e.target.value)}
+                        onKeyDown={handleKeyDown}
                         autoFocus
+                        rows={1}
                         placeholder="Type here..."
                         className={styles.textInput}
                     ></textarea>
-                    <SendOutlined style={sendButtonStyle} onClick={onEnter} />
+                    <SendOutlined
+                        className={styles.sendButton}
+                        onClick={onSend}
+                    />
                 </div>
             </div>
         </div>

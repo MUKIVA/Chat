@@ -2,6 +2,7 @@ import { declareAction } from "@reatom/core"
 import { UserApi } from "../../api/userApi"
 import { declareAsyncAction } from "../../core/reatom/declareAsyncAction"
 import { declareAtomWithSetter } from "../../core/reatom/declareAtomWithSetter"
+import { checkUserName, cleanString } from "../../core/utils/utils"
 import { UserData } from "./userData"
 
 const logout = declareAction('logout')
@@ -22,6 +23,13 @@ const login = declareAsyncAction<UserData>(
 const register = declareAsyncAction<UserData>(
     'register',
     async (userData, store) => {
+        const userNameError = !checkUserName(userData.name)
+        store.dispatch(setUserNameError(userNameError))
+
+        if (userNameError) {
+            return
+        }
+
         const { status } = await UserApi.createUser(userData)
 
         store.dispatch(setRegisterError(!status))
@@ -41,20 +49,23 @@ const [isAuthAtom, setIsAuth] = declareAtomWithSetter<boolean>('isAuthAtom', fal
     on(logout, () => false),
 ])
 
-const [userNameAtom, setUserName] = declareAtomWithSetter<string>('name', '');
-const [passwordAtom, setPassword] = declareAtomWithSetter<string>('paswrd', '');
+const [userNameAtom, setUserName] = declareAtomWithSetter<string>('name', '', on => [
+    on(login, (_, value) => cleanString(value.name)),
+])
+
+const [passwordAtom, setPassword] = declareAtomWithSetter<string>('paswrd', '')
 
 const [registerErrorAtom, setRegisterError] = declareAtomWithSetter<boolean>('registerErrorAtom', false, on => [
     on(setUserName, () => false),
-    on(login, () => false),
-    on(logout, () => false),
 ])
 
 const [loginErrorAtom, setLoginError] = declareAtomWithSetter<boolean>('loginErrorAtom', false, on => [
     on(setUserName, () => false),
     on(setPassword, () => false),
-    on(register, () => false),
-    on(logout, () => false),
+])
+
+const [userNameErrorAtom, setUserNameError] = declareAtomWithSetter<boolean>('userNameError', false, on => [
+    on(setUserName, () => false),
 ])
 
 export const authActions = {
@@ -67,6 +78,7 @@ export const authActions = {
     setPassword,
     setRegisterError,
     setLoginError,
+    setUserNameError,
 }
 
 export const authAtoms = {
@@ -76,4 +88,5 @@ export const authAtoms = {
     passwordAtom,
     registerErrorAtom,
     loginErrorAtom,
+    userNameErrorAtom,
 }
