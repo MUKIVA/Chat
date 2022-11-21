@@ -1,0 +1,24 @@
+name: GitHub Backend Actions
+on:
+  push:
+    branches: [ dev ]
+jobs:
+  Backend-Actions:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ['6.X']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install dependencies backend
+        run: dotnet restore ./backend
+      - name: Install dependencies BackendTests 
+        run: dotnet restore ./BackendTests
+      - name: Build
+        run: dotnet build ./backend --configuration Release --no-restore
+      - name: Test
+        run: dotnet test ./BackendTests --no-restore --verbosity normal
