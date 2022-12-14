@@ -1,0 +1,58 @@
+name: Publish on Docker Hub
+on:
+  push:
+    branches: [ main ]
+jobs:
+
+  Frontend-Actions:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.x ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Starting Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install node modules
+        run: npm install --prefix ./client
+      - name: Build project
+        run: npm run build --prefix ./client
+      - name: Test
+        run: npm run test --prefix ./client
+
+
+  Backend-Actions:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ['6.X']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install dependencies backend
+        run: dotnet restore ./backend
+      - name: Install dependencies BackendTests 
+        run: dotnet restore ./BackendTests
+      - name: Build
+        run: dotnet build ./backend --configuration Release --no-restore
+      - name: Test
+        run: dotnet test ./BackendTests --no-restore --verbosity normal
+
+  build_and_pub:
+    needs: [Backend-Actions, Frontend-Actions]
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Login to docker.io
+        run:  echo ${{ secrets.DOCKER_PWD }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+      - uses: actions/checkout@master
+      - name: Build image
+        run: docker-compose build
+      - name: Push image to docker.io
+        run: docker-compose push
+
+    
